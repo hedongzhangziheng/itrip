@@ -14,7 +14,6 @@ org.springframework.data.redis.RedisConnectionFailureException: java.net.SocketT
 	at org.springframework.data.redis.core.AbstractOperations.execute(AbstractOperations.java:86)
 	at org.springframework.data.redis.core.DefaultValueOperations.set(DefaultValueOperations.java:169)
 	at club.zhangkang.itrip.common.RedisUtil.setString(RedisUtil.java:298)
-	at RedisTest.test03(RedisTest.java:39)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)

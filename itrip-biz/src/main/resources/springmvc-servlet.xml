@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+ http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd
+ http://www.springframework.org/schema/mvc
+ http://www.springframework.org/schema/mvc/spring-mvc.xsd
+ http://www.springframework.org/schema/task
+ http://www.springframework.org/schema/task/spring-task.xsd">
+    <!--开启IOC注解支持-->
+    <!--包扫描，指定控制类-->
+    <context:component-scan base-package="club.zhangkang.itrip.biz.controller"/>
+    <!--开启定时器注解支持-->
+    <task:annotation-driven/>
+    <!--mvc的注解支持-->
+    <mvc:annotation-driven>
+        <!--消息转换器  转json过程中，将时间类型的数据转成String-->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd" />
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!--swagger-->
+    <mvc:resources location="classpath:/META-INF/resources/" mapping="swagger-ui.html"/>
+    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**"/>
+    <bean class="club.zhangkang.itrip.biz.controller.SwaggerConfig"/>
+
+    <!--文件上传设置-->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"/>
+        <!--设置文件最大上传大小，超过最大值会提示无法访问-->
+        <property name="maxUploadSize" value="5242880"/>
+        <property name="maxInMemorySize" value="40960"/>
+        <property name="resolveLazily" value="true"/><!--注意方法入参，不要从请求取数据-->
+    </bean>
+
+    <!--读取文件上传的配置文件-->
+    <context:property-placeholder location="classpath:systemConfig.properties"/>
+
+    <bean name="systemConfig" class="club.zhangkang.itrip.common.SystemConfig">
+        <property name="fileUploadPathString" value="${sysConfig.fileUploadPath}"/>
+        <property name="visitImgUrlString" value="${sysConfig.visitImgUrl}"/>
+        <property name="machineCode" value="${sysConfig.machineCode}"/>
+        <property name="orderProcessOK" value="${sysConfig.orderProcessOK}"/>
+        <property name="orderProcessCancel" value="${sysConfig.orderProcessCancel}"/>
+    </bean>
+
+</beans>
